@@ -1,5 +1,5 @@
 using System.Diagnostics.Contracts;
-using Soenneker.Enums.DateTimePrecision;
+using Soenneker.Enums.UnitOfTime;
 
 namespace Soenneker.Extensions.DateTime.Year;
 
@@ -16,7 +16,7 @@ public static class DateTimeYearExtension
     [Pure]
     public static System.DateTime ToEndOfYear(this System.DateTime dateTime)
     {
-        System.DateTime result = dateTime.ToEndOf(DateTimePrecision.Year);
+        System.DateTime result = dateTime.ToEndOf(UnitOfTime.Year);
         return result;
     }
 
@@ -28,7 +28,7 @@ public static class DateTimeYearExtension
     [Pure]
     public static System.DateTime ToEndOfNextYear(this System.DateTime dateTime)
     {
-        System.DateTime result = dateTime.ToEndOf(DateTimePrecision.Year).AddYears(1);
+        System.DateTime result = dateTime.ToEndOfYear().AddYears(1);
         return result;
     }
 
@@ -40,7 +40,7 @@ public static class DateTimeYearExtension
     [Pure]
     public static System.DateTime ToEndOfPreviousYear(this System.DateTime dateTime)
     {
-        System.DateTime result = dateTime.ToEndOf(DateTimePrecision.Year).AddYears(-1);
+        System.DateTime result = dateTime.ToEndOfYear().AddYears(-1);
         return result;
     }
 
@@ -53,7 +53,7 @@ public static class DateTimeYearExtension
     [Pure]
     public static System.DateTime ToStartOfYear(this System.DateTime dateTime)
     {
-        System.DateTime result = dateTime.ToStartOf(DateTimePrecision.Year);
+        System.DateTime result = dateTime.ToStartOf(UnitOfTime.Year);
         return result;
     }
 
@@ -109,7 +109,7 @@ public static class DateTimeYearExtension
     [Pure]
     public static System.DateTime ToStartOfNextTzYear(this System.DateTime utcNow, System.TimeZoneInfo tzInfo)
     {
-        System.DateTime result = utcNow.ToTz(tzInfo).ToStartOfNextYear().ToUtc(tzInfo);
+        System.DateTime result = utcNow.ToStartOfTzYear(tzInfo).AddYears(1);
         return result;
     }
 
@@ -135,7 +135,7 @@ public static class DateTimeYearExtension
     [Pure]
     public static System.DateTime ToEndOfTzYear(this System.DateTime utcNow, System.TimeZoneInfo tzInfo)
     {
-        System.DateTime result = utcNow.ToStartOfNextTzYear(tzInfo).AddTicks(-1);
+        System.DateTime result = utcNow.ToTz(tzInfo).ToEndOfYear().ToUtc(tzInfo);
         return result;
     }
 
@@ -148,7 +148,7 @@ public static class DateTimeYearExtension
     [Pure]
     public static System.DateTime ToEndOfPreviousTzYear(this System.DateTime utcNow, System.TimeZoneInfo tzInfo)
     {
-        System.DateTime result = utcNow.ToStartOfTzYear(tzInfo).AddTicks(-1);
+        System.DateTime result = utcNow.ToEndOfTzYear(tzInfo).AddYears(-1);
         return result;
     }
 
@@ -161,7 +161,7 @@ public static class DateTimeYearExtension
     [Pure]
     public static System.DateTime ToEndOfNextTzYear(this System.DateTime utcNow, System.TimeZoneInfo tzInfo)
     {
-        System.DateTime result = utcNow.ToStartOfTzYear(tzInfo).AddYears(1).AddTicks(-1);
+        System.DateTime result = utcNow.ToEndOfTzYear(tzInfo).AddYears(1);
         return result;
     }
 }
