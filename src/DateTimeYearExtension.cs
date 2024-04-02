@@ -9,42 +9,6 @@ namespace Soenneker.Extensions.DateTime.Year;
 public static class DateTimeYearExtension
 {
     /// <summary>
-    /// Adjusts the given <paramref name="dateTime"/> to the last moment of the current year.
-    /// </summary>
-    /// <param name="dateTime">The date time to adjust.</param>
-    /// <returns>A <see cref="DateTime"/> instance representing the last moment of the current year.</returns>
-    [Pure]
-    public static System.DateTime ToEndOfYear(this System.DateTime dateTime)
-    {
-        System.DateTime result = dateTime.ToEndOf(UnitOfTime.Year);
-        return result;
-    }
-
-    /// <summary>
-    /// Adjusts the given <paramref name="dateTime"/> to the last moment of the next year.
-    /// </summary>
-    /// <param name="dateTime">The date time to adjust.</param>
-    /// <returns>A <see cref="DateTime"/> instance representing the last moment of the next year.</returns>
-    [Pure]
-    public static System.DateTime ToEndOfNextYear(this System.DateTime dateTime)
-    {
-        System.DateTime result = dateTime.ToEndOfYear().AddYears(1);
-        return result;
-    }
-
-    /// <summary>
-    /// Adjusts the given <paramref name="dateTime"/> to the last moment of the previous year.
-    /// </summary>
-    /// <param name="dateTime">The date time to adjust.</param>
-    /// <returns>A <see cref="DateTime"/> instance representing the last moment of the previous year.</returns>
-    [Pure]
-    public static System.DateTime ToEndOfPreviousYear(this System.DateTime dateTime)
-    {
-        System.DateTime result = dateTime.ToEndOfYear().AddYears(-1);
-        return result;
-    }
-
-    /// <summary>
     /// Adjusts the given <paramref name="dateTime"/> to the first moment of the current year.
     /// </summary>
     /// <remarks>Does not consider timezone, careful.</remarks>
@@ -54,6 +18,18 @@ public static class DateTimeYearExtension
     public static System.DateTime ToStartOfYear(this System.DateTime dateTime)
     {
         System.DateTime result = dateTime.ToStartOf(UnitOfTime.Year);
+        return result;
+    }
+
+    /// <summary>
+    /// Adjusts the given <paramref name="dateTime"/> to the last moment of the current year.
+    /// </summary>
+    /// <param name="dateTime">The date time to adjust.</param>
+    /// <returns>A <see cref="DateTime"/> instance representing the last moment of the current year.</returns>
+    [Pure]
+    public static System.DateTime ToEndOfYear(this System.DateTime dateTime)
+    {
+        System.DateTime result = dateTime.ToEndOf(UnitOfTime.Year);
         return result;
     }
 
@@ -88,6 +64,30 @@ public static class DateTimeYearExtension
     }
 
     /// <summary>
+    /// Adjusts the given <paramref name="dateTime"/> to the last moment of the next year.
+    /// </summary>
+    /// <param name="dateTime">The date time to adjust.</param>
+    /// <returns>A <see cref="DateTime"/> instance representing the last moment of the next year.</returns>
+    [Pure]
+    public static System.DateTime ToEndOfNextYear(this System.DateTime dateTime)
+    {
+        System.DateTime result = dateTime.ToEndOfYear().AddYears(1);
+        return result;
+    }
+
+    /// <summary>
+    /// Adjusts the given <paramref name="dateTime"/> to the last moment of the previous year.
+    /// </summary>
+    /// <param name="dateTime">The date time to adjust.</param>
+    /// <returns>A <see cref="DateTime"/> instance representing the last moment of the previous year.</returns>
+    [Pure]
+    public static System.DateTime ToEndOfPreviousYear(this System.DateTime dateTime)
+    {
+        System.DateTime result = dateTime.ToEndOfYear().AddYears(-1);
+        return result;
+    }
+
+    /// <summary>
     /// Converts a UTC date and time to the start of the year based on a specified time zone.
     /// </summary>
     /// <param name="utcNow">The UTC date and time to convert.</param>
@@ -109,7 +109,7 @@ public static class DateTimeYearExtension
     [Pure]
     public static System.DateTime ToStartOfNextTzYear(this System.DateTime utcNow, System.TimeZoneInfo tzInfo)
     {
-        System.DateTime result = utcNow.ToStartOfTzYear(tzInfo).AddYears(1);
+        System.DateTime result = utcNow.ToTz(tzInfo).ToStartOfNextYear().ToUtc(tzInfo);
         return result;
     }
 
@@ -122,7 +122,7 @@ public static class DateTimeYearExtension
     [Pure]
     public static System.DateTime ToStartOfPreviousTzYear(this System.DateTime utcNow, System.TimeZoneInfo tzInfo)
     {
-        System.DateTime result = utcNow.ToStartOfTzYear(tzInfo).AddYears(-1);
+        System.DateTime result = utcNow.ToTz(tzInfo).ToStartOfPreviousYear().ToUtc(tzInfo);
         return result;
     }
 
@@ -148,7 +148,7 @@ public static class DateTimeYearExtension
     [Pure]
     public static System.DateTime ToEndOfPreviousTzYear(this System.DateTime utcNow, System.TimeZoneInfo tzInfo)
     {
-        System.DateTime result = utcNow.ToEndOfTzYear(tzInfo).AddYears(-1);
+        System.DateTime result = utcNow.ToTz(tzInfo).ToEndOfPreviousYear().ToUtc(tzInfo);
         return result;
     }
 
@@ -161,7 +161,7 @@ public static class DateTimeYearExtension
     [Pure]
     public static System.DateTime ToEndOfNextTzYear(this System.DateTime utcNow, System.TimeZoneInfo tzInfo)
     {
-        System.DateTime result = utcNow.ToEndOfTzYear(tzInfo).AddYears(1);
+        System.DateTime result = utcNow.ToTz(tzInfo).ToEndOfNextYear().ToUtc(tzInfo);
         return result;
     }
 }
