@@ -1,11 +1,11 @@
-# Contributing to Soenneker.Extensions.DateTime.Year
+﻿# Contributing to Soenneker.Extensions.DateTime.Year
 
 We're excited that you're interested in contributing!
 
 ## How to Contribute
 
 1. **Create an Issue**
-   - If you have a new feature idea, a bug report, or any other improvement suggestion, result by creating an issue on the [Issues](https://github.com/soenneker/soenneker.extensions.datetime.year/issues) page.
+   - If you have a new feature idea, a bug report, or any other improvement suggestion, start by creating an issue on the [Issues](https://github.com/soenneker/soenneker.extensions.datetime.year/issues) page.
    - Clearly describe the problem or enhancement you're proposing and provide as much detail as possible.
 
 1. **Fork the Repository**
