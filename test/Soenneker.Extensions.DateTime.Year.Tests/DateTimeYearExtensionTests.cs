@@ -1,11 +1,10 @@
 using Soenneker.Tests.Unit;
-using Xunit;
 
 namespace Soenneker.Extensions.DateTime.Year.Tests;
 
 public class DateTimeYearExtensionTests : UnitTest
 {
-    [Fact]
+    [Test]
     public void Default()
     {
 
