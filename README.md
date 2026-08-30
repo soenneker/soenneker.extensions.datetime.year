@@ -4,7 +4,8 @@
 [![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.extensions.datetime.year/codeql.yml?label=CodeQL&style=for-the-badge)](https://github.com/soenneker/soenneker.extensions.datetime.year/actions/workflows/codeql.yml)
 
 # ![](https://user-images.githubusercontent.com/4441470/224455560-91ed3ee7-f510-4041-a8d2-3fc093025112.png) Soenneker.Extensions.DateTime.Year
-A collection of helpful DateTime year-based extension methods.
+
+Computes current, previous, and next calendar-year boundaries for `DateTime`, with optional time-zone-aware UTC results.
 
 ## Installation
 
@@ -12,26 +13,39 @@ A collection of helpful DateTime year-based extension methods.
 dotnet add package Soenneker.Extensions.DateTime.Year
 ```
 
-## Quick start
+## Calendar-field boundaries
 
 ```csharp
 using Soenneker.Extensions.DateTime.Year;
 
-DateTime dateTime = DateTime.UtcNow;
-var result = dateTime.ToStartOfYear();
+System.DateTime value = new(2026, 8, 29, 16, 42, 30, DateTimeKind.Utc);
+
+System.DateTime start = value.ToStartOfYear();
+System.DateTime end = value.ToEndOfYear();
+System.DateTime previousStart = value.ToStartOfPreviousYear();
+System.DateTime nextEnd = value.ToEndOfNextYear();
 ```
 
-## Common operations
+| Method pair | Selected year |
+| --- | --- |
+| `ToStartOfYear()` / `ToEndOfYear()` | Current |
+| `ToStartOfPreviousYear()` / `ToEndOfPreviousYear()` | Previous |
+| `ToStartOfNextYear()` / `ToEndOfNextYear()` | Next |
 
-- `ToStartOfYear()` - Adjusts the given `dateTime` to the first moment of the current year. Returns a `DateTime` instance representing the first moment of the current year. Does not consider timezone, careful.
-- `ToEndOfYear()` - Adjusts the given `dateTime` to the last moment of the current year. Returns a `DateTime` instance representing the last moment of the current year.
-- `ToStartOfNextYear()` - Adjusts the given `dateTime` to the first moment of the next year. Returns a `DateTime` instance representing the first moment of the next year. Does not consider timezone, careful.
-- `ToStartOfPreviousYear()` - Adjusts the provided `DateTime` value to the first moment (00:00:00) of the previous year relative to the date provided.
-- `ToEndOfNextYear()` - Adjusts the given `dateTime` to the last moment of the next year. Returns a `DateTime` instance representing the last moment of the next year.
-- `ToEndOfPreviousYear()` - Adjusts the given `dateTime` to the last moment of the previous year. Returns a `DateTime` instance representing the last moment of the previous year.
-- `ToStartOfTzYear()` - Converts a UTC date and time to the start of the year based on a specified time zone. Returns the start of the year in UTC, adjusted for the specified time zone.
-- `ToStartOfNextTzYear()` - Converts a UTC date and time to the start of the next year based on a specified time zone. Returns the start of the next year in UTC, adjusted for the specified time zone.
-- `ToStartOfPreviousTzYear()` - Converts a UTC date and time to the start of the previous year based on a specified time zone. Returns the start of the previous year in UTC, adjusted for the specified time zone.
-- `ToEndOfTzYear()` - Converts a UTC date and time to the last moment of the current year based on a specified time zone. Returns the last moment of the current year in UTC, adjusted for the specified time zone.
-- `ToEndOfPreviousTzYear()` - Converts a UTC date and time to the last moment of the previous year based on a specified time zone. Returns the last moment of the previous year in UTC, adjusted for the specified time zone.
-- `ToEndOfNextTzYear()` - Converts a UTC date and time to the last moment of the next year based on a specified time zone. Returns the last moment of the next year in UTC, adjusted for the specified time zone.
+Starts are January 1 at midnight. Ends are one tick before January 1 of the following year. These methods operate on the input calendar fields, preserve `Kind`, and use `DateTime` calendar arithmetic, including leap years. They do not perform time-zone conversion.
+
+## Time-zone-aware boundaries
+
+```csharp
+TimeZoneInfo eastern = TimeZoneInfo.FindSystemTimeZoneById("America/New_York");
+System.DateTime utc = new(2026, 8, 29, 18, 0, 0, DateTimeKind.Utc);
+
+System.DateTime localYearStartUtc = utc.ToStartOfTzYear(eastern);
+System.DateTime localYearEndUtc = utc.ToEndOfTzYear(eastern);
+```
+
+Time-zone variants cover the current, previous, and next local calendar year and return boundaries as UTC `DateTime` values. Their names follow the same pattern, including `ToStartOfPreviousTzYear()` and `ToEndOfNextTzYear()`.
+
+If the input `Kind` is not `Utc`, its fields are treated as UTC rather than converted from the machine's local zone. Supply an actual UTC value to avoid ambiguity.
+
+Year ends are one tick before the following valid local January 1 boundary. If a local year begins in a daylight-saving gap, the boundary advances to the first valid local minute; if it is ambiguous, the earlier UTC instant is selected.
